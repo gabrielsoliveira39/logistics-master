@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Master | Simulador Corporativo de Supply Chain</title>
+    <meta name="description" content="Simulador logístico corporativo: tome decisões estratégicas, gerencie crises, conquiste medalhas e prove domínio total da cadeia de suprimentos.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="frontend/css/styles.css">
+</head>
+<body>
+
+    <!-- CABEÇALHO FIXO -->
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">LM</div>
+            <div class="logo-text">
+                <h1>Logistics Master</h1>
+                <span>Enterprise Simulation · v2.0</span>
+            </div>
+        </div>
+        <div id="header-difficulty-badge" class="difficulty-badge"></div>
+    </header>
+
+    <!-- ======================================
+         TELA 1: INÍCIO
+         ====================================== -->
+    <section id="screen-start" class="screen" style="display: flex;">
+        <div class="hero-box">
+            <div class="hero-logo">🏭</div>
+            <h2>Gestão Estratégica de<br><span class="highlight">Supply Chain</span></h2>
+            <p>Você foi contratado para assumir o controle de um Centro de Distribuição em colapso. Em 15 ciclos fiscais, você precisará tomar decisões logísticas críticas, sobreviver a eventos de mercado imprevisíveis e provar que tem o domínio de um verdadeiro Gerente de Operações.</p>
+            <button class="btn-primary" onclick="startRules()">▶ Iniciar Simulação</button>
+        </div>
+    </section>
+
+    <!-- ======================================
+         TELA 1.5: REGRAS + DIFICULDADE
+         ====================================== -->
+    <section id="screen-rules" class="screen">
+        <div class="rules-box">
+            <h2>📋 Briefing de Operação</h2>
+            <p class="rules-subtitle">Leia as instruções e selecione sua dificuldade antes de assumir o posto.</p>
+
+            <div class="rules-grid">
+                <div class="rule-item">
+                    <h3>🎯 Decisões Logísticas</h3>
+                    <p>Cada rodada apresenta um ticket real de problema no CD. Analise o contexto e escolha a ação mais estratégica dentro do tempo limite.</p>
+                    <div class="rule-score">
+                        <span class="green">✅ Correta: +10 pts base</span>
+                        <span class="yellow">⚠️ Parcial: +5 pts</span>
+                        <span class="red">❌ Incorreta: penalidade por dificuldade</span>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <h3>⚡ Sistema de COMBO</h3>
+                    <p>Acertos consecutivos ativam o modo Combo, multiplicando os pontos ganhos. Cada medalha pode reduzir o limiar de ativação!</p>
+                    <div class="rule-score">
+                        <span class="green">🔥 3 em sequência: +2 pts bônus</span>
+                        <span class="green">⚡ 5 em sequência: +5 pts épico</span>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <h3>⏱️ Cronômetro por Rodada</h3>
+                    <p>Cada decisão tem um limite de tempo baseado na dificuldade. Responda rápido para ganhar pontos extras de eficiência!</p>
+                    <div class="rule-score">
+                        <span class="green">⚡ Antes do meio-tempo: +3 pts</span>
+                        <span class="red">💀 Tempo esgotado: -5 pts</span>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <h3>⚙️ Status Operacional</h3>
+                    <p>Você começa com 100% de estabilidade. Erros drenam o CD. Se chegar a <strong style="color:var(--danger-color)">0%</strong>, você é demitido — a não ser que possua o Escudo!</p>
+                    <div class="rule-score">
+                        <span class="green">🏅 Algumas medalhas restauram o Status!</span>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <h3>🚨 Eventos de Mercado</h3>
+                    <p>A cada 3 rodadas, um evento externo ocorre: greves, ciberataques, automação... Medalhas podem reduzir o impacto negativo!</p>
+                    <div class="rule-score">
+                        <span class="yellow">⚠️ Rodadas 3, 6, 9, 12 (indicadas com • amarelo)</span>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <h3>🏅 16 Medalhas com Benefícios</h3>
+                    <p>Acertar cada desafio desbloqueia uma medalha com <strong>bônus passivo ativo</strong> pelo resto da partida. Clique em qualquer medalha para ver seus poderes!</p>
+                    <div class="rule-score">
+                        <span class="green">Cada medalha muda como o jogo funciona para você</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SELEÇÃO DE DIFICULDADE -->
+            <div class="difficulty-selection">
+                <h3>Selecione a Dificuldade</h3>
+                <div class="difficulty-btns">
+                    <button class="diff-btn" id="diff-facil" onclick="setDificuldade('facil')">
+                        <span class="diff-icon">🟢</span>
+                        <span class="diff-name">Fácil</span>
+                        <span class="diff-desc">60s por rodada<br>Penalidades reduzidas<br>Ideal para aprender logística</span>
+                    </button>
+                    <button class="diff-btn active" id="diff-medio" onclick="setDificuldade('medio')">
+                        <span class="diff-icon">🟡</span>
+                        <span class="diff-name">Médio</span>
+                        <span class="diff-desc">45s por rodada<br>Penalidades padrão de mercado<br>✅ Recomendado</span>
+                    </button>
+                    <button class="diff-btn" id="diff-dificil" onclick="setDificuldade('dificil')">
+                        <span class="diff-icon">🔴</span>
+                        <span class="diff-name">Difícil</span>
+                        <span class="diff-desc">25s por rodada<br>Penalidades severas<br>Para especialistas</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="rules-actions">
+                <button class="btn-primary" onclick="initGame()">🚀 Assumir a Operação</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================
+         TELA 2: DASHBOARD DE JOGO
+         ====================================== -->
+    <section id="screen-game" class="screen">
+        <div class="dashboard-grid">
+
+            <!-- Painel Principal -->
+            <div class="main-panel">
+
+                <!-- HUD SUPERIOR -->
+                <div class="hud-bar">
+                    <!-- Rodada + Progresso -->
+                    <div class="hud-item">
+                        <span class="label">Mês Fiscal</span>
+                        <span class="value" id="hud-round">1 / 15</span>
+                        <div class="round-progress" id="round-progress"></div>
+                    </div>
+
+                    <!-- Pontuação + Combo -->
+                    <div class="hud-item">
+                        <span class="label">Reputação</span>
+                        <div class="score-area">
+                            <span class="value" id="hud-score">0</span>
+                            <span class="combo-indicator" id="combo-indicator">
+                                🔥 COMBO x<span id="combo-count">0</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Timer SVG -->
+                    <div class="hud-item timer-item">
+                        <span class="label">Tempo Restante</span>
+                        <div class="timer-display" id="timer-display">
+                            <svg class="timer-svg" viewBox="0 0 36 36">
+                                <path class="timer-bg"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                <path class="timer-fill" id="timer-svg-fill"
+                                    stroke-dasharray="100, 100"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            </svg>
+                            <span class="timer-text" id="timer-text">45</span>
+                        </div>
+                    </div>
+
+                    <!-- Status Operacional -->
+                    <div class="hud-item">
+                        <span class="label">Status Operacional</span>
+                        <span class="value" id="hud-status" style="color: var(--accent-color);">Excelente</span>
+                        <div class="status-bar-container">
+                            <div class="status-bar-fill" id="status-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARTÃO DE DESAFIO -->
+                <div class="challenge-card" id="challenge-card">
+                    <div class="card-header">
+                        <span class="category-tag" id="card-category">Categoria</span>
+                        <span class="ticket-id" id="card-ticket">TICKET #000</span>
+                    </div>
+
+                    <h2 class="card-title" id="card-title">Carregando desafio...</h2>
+                    <p class="card-context" id="card-context">Contexto situacional...</p>
+
+                    <!-- Opções de Resposta (geradas via JS) -->
+                    <div class="options-grid" id="options-container"></div>
+
+                    <!-- Feedback após resposta -->
+                    <div class="feedback-container" id="feedback-container">
+                        <div class="feedback-box" id="feedback-box"></div>
+                        <div class="feedback-actions">
+                            <div class="pts-animation" id="pts-animation"></div>
+                            <button class="btn-next" id="btn-next" onclick="nextRound()">Próximo Ciclo ➔</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Painel Lateral de Medalhas -->
+            <div class="side-panel">
+                <h3 class="side-title">🏅 Medalhas de Gestão</h3>
+                <p class="side-subtitle">Clique para ver descrição e benefício de cada medalha.</p>
+                <div class="achievements-grid" id="achievements-grid"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================
+         TELA 3: RESULTADO FINAL
+         ====================================== -->
+    <section id="screen-result" class="screen">
+        <div class="result-box">
+            <div class="result-header">
+                <h2 id="result-title">TÍTULO RESULTADO</h2>
+                <div class="result-score" id="final-score">0 pts</div>
+                <p id="result-desc">Descrição do resultado...</p>
+                <p class="result-classification" id="result-classification"></p>
+            </div>
+
+            <!-- Grade de Estatísticas -->
+            <div class="stats-grid">
+                <div class="stat-item correct">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value" id="stat-acertos">0</div>
+                    <div class="stat-label">Acertos</div>
+                </div>
+                <div class="stat-item partial">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-value" id="stat-parciais">0</div>
+                    <div class="stat-label">Parciais</div>
+                </div>
+                <div class="stat-item incorrect">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-value" id="stat-erros">0</div>
+                    <div class="stat-label">Erros</div>
+                </div>
+                <div class="stat-item combo">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="stat-combo">0x</div>
+                    <div class="stat-label">Combo Máx.</div>
+                </div>
+                <div class="stat-item medals">
+                    <div class="stat-icon">🏅</div>
+                    <div class="stat-value" id="stat-medals">0/16</div>
+                    <div class="stat-label">Medalhas</div>
+                </div>
+                <div class="stat-item events">
+                    <div class="stat-icon">🚨</div>
+                    <div class="stat-value" id="stat-events">0</div>
+                    <div class="stat-label">Eventos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="stat-taxa">0%</div>
+                    <div class="stat-label">Taxa de Acerto</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⚙️</div>
+                    <div class="stat-value" id="stat-status">0%</div>
+                    <div class="stat-label">Status Final</div>
+                </div>
+            </div>
+
+            <!-- Medalhas conquistadas -->
+            <div class="result-medals" id="result-medals"></div>
+
+            <button class="btn-primary" onclick="restartGame()">🔄 Novo Ciclo Fiscal</button>
+        </div>
+    </section>
+
+    <!-- ======================================
+         MODAL: EVENTO DE MERCADO
+         ====================================== -->
+    <div class="modal-overlay" id="event-modal">
+        <div class="event-modal">
+            <h2 id="event-title">EVENTO DE MERCADO</h2>
+            <p id="event-desc">Descrição do evento.</p>
+            <p class="impact" id="event-impact">Impacto operacional</p>
+            <p id="event-points" style="margin-top: 14px;"></p>
+            <div class="shield-msg" id="event-shield-msg" style="display:none;"></div>
+            <button onclick="closeEventModal()">✓ Reconhecer e Continuar</button>
+        </div>
+    </div>
+
+    <!-- ======================================
+         MODAL: DETALHES DA MEDALHA
+         ====================================== -->
+    <div class="modal-overlay" id="medal-modal" onclick="closeMedalModal(event)">
+        <div class="medal-detail-modal">
+            <div class="medal-detail-icon" id="medal-detail-icon">🏅</div>
+            <h2 id="medal-detail-name">Nome da Medalha</h2>
+            <div class="medal-detail-status" id="medal-detail-status">🔒 BLOQUEADA</div>
+            <p id="medal-detail-desc">Como desbloquear esta medalha...</p>
+            <div class="medal-detail-benefit">
+                <strong>⚡ Benefício Passivo Ativo:</strong>
+                <p id="medal-benefit-text">Descrição do bônus...</p>
+            </div>
+            <button class="btn-close-medal" onclick="document.getElementById('medal-modal').style.display='none'">
+                Fechar
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts externos (data.js deve ser carregado antes de game.js) -->
+    <script src="frontend/js/data.js"></script>
+    <script src="frontend/js/game.js"></script>
+
+</body>
+</html>
